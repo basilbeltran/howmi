@@ -1,0 +1,177 @@
+Setting Up the Local Development Environment
+Setting Up Node.js Locally
+
+Node.js will be used to run and debug Web applications on local machines. When satisfied with local development, the code will be committed and push to OpenShift and GitHub. The code will be deployed to OpenShift and executed on a remote Node.js server. Download and install Node.js on the local development machine. Test that Node.js installed by typing the command node at the command line. A command prompt should appear waiting for additional commands. Type Ctrl+c twice to exit Node.js command line interpreter.
+Setting Up MongoDB Locally
+
+MongoDB will be used to provide a local database to develop and debug database development. In a later assignment you will create a remote MongoDB instance on OpenShift where your data will be stored remotely. Your remote Node.js server will talk to your remote MongoDB instance. Your local Node.js server will talk to your local MongoDB instance. When you are content with your local development, you will push your code to OpenShift for remote deployment, and to GitHub for us to grade. For now you will just download and install MongoDB locally. Later we will show you how to configure and integrate MongoDB with your Node.js Web application.
+
+    Download MongoDB and install on the local development machine as described in the MongoDB documentation. These instructions assume MongoDB was installed in /usr/local/mongo on a Mac
+    At the root of the file system, create a directory called data and in there create a directory called db, e.g., /data/db. This directory is where MongoDB will store all files related to the databases managed by MongoDB
+    Add the MongoDB binaries to the system PATH environment variable so that the database can be executed from anywhere in the terminal command line. Assuming MongoDB was installed in /usr/local/mongo, add the bin directory to the system path by adding the following line to the ~/.bash_property file
+
+    export PATH=/usr/local/mongo/bin:$PATH
+    Test that MongoDB starts by typing mongod at the command line. The command line will print several lines. Some of the lines should say something similar to
+
+MongoDB starting : pid=56659 port=27017 dbpath=/data/db
+
+...
+
+waiting for connections on port 27017
+
+    Make sure MongoDB is running before you start Node.js.
+
+Setting Up Git Locally
+
+Git is a distributed source control system that allows developers collaborate and share source code. All assignments and the final project will be submitted using git. Install and configure git on your machine.
+
+    If on a windows machine, download, install, and configure a github client from any of the following sites. Be sure to install the command tools as well
+
+    https://git-scm.com/download/win (preferred)
+    https://desktop.github.com
+    https://github.com/blog/1127-github-for-windows
+
+    If on a Mac git should already be installed. Verify that git is installed on your machine by typing git at a terminal window
+
+Setting Up the Template Project Locally
+
+A template project has been created that can will used as the starting point for all development in this course. Using git the template will be cloned to the local development environment. All development for the assignments and final project will be done in the cloned project. To clone and test the template follow the steps below
+
+    Using the terminal change to the directory where all work will be done for this course, e.g., ~/summer2016
+
+    > mkdir ~/summer2016
+    > cd ~/summer2016
+    Clone the template project by typing the following at the command line
+
+
+        > cd ~/summer2016
+        > git clone https://github.com/jannunzi/web-dev-template.git
+
+    A directory called web-dev-template will be created. Check that it's there using ls
+
+    > cd ~/summer2016
+    > ls
+    > web-dev-template
+    Optionally rename the directory to something else, e.g., web-dev
+
+    > cd ~/summer2016
+    > mv web-dev-template web-dev
+    Go into the directory and install the project
+
+    > cd ~/summer2016/web-dev
+    > npm install
+    Once all Node.js modules have been installed, run the project using Node.js
+
+    > cd ~/summer2016/web-dev
+    > node server.js
+    Test the application is running by navigating with the browser to the following URL
+
+    localhost:3000
+    The browser should display something similar to
+
+    Web Dev Course Home Page
+
+Customize this home page to your liking.
+Required links
+
+    Project
+    Assignment
+    Test MongoDB
+    Your public repository at GitHub.com
+
+    Test whether the local MongoDB database is working by clicking on Test MongoDB. The following page should appear
+
+    test-mongodb.png
+    Type several messages in the input field and press the blue plus button. The messages should be created on the local database and they should appear below the field. For instance
+
+    test-mongo-2.png
+    Test deleting some of the messages. The messages should disappear as they are removed
+
+Setting Up GitHub
+GitHub will be used to keep track of all work. All code will be committed and pushed to a public GitHub repository. A private GitHub can be used, but it may not be free. The GitHub repository will allow TAs and instructors easy access to your work. When submitting an assignment, tag the latest commit with a particular tag for that assignment provided by the assignment. This will be used by the TAs and instructors to grade the correct version of your code.
+
+    Create an account on GitHub.com. If you already have a GitHub account, feel free to use the same account
+    Create a repository called LAST_NAME-FIRST_NAME-web-dev, where LAST_NAME and FIRST_NAME is YOUR last name and first name. For MY last and first name it would be annunziato-jose-web-dev
+    Commit and push your code to GitHub. In this example jannunzi is my GitHub username, and the new repository is annunziato-jose-web-dev. You would use YOUR GitHub username, and YOUR new repository name
+
+    > cd ~/summer2016/web-dev
+    > git init
+    > git commit -m "first commit"
+    > git remote add github https://github.com/jannunzi/annunziato-jose-web-dev.git
+    > git push -u github master
+
+    Click on the Code tab and verify that the source code is there
+    Invite the TAs and the instructors as administrators of the repository. This will allow them to help you debug your code if you run into trouble. It will also allow them to keep track of your progress
+
+    Go into Settings, then Collaborators. Search for the instructors and TAs by their username, and then click on Add collaborator
+    The instructor's GitHub username is jannunzi. The instructor's repository is located at https://github.com/jannunzi
+    The TAs will provide their GitHub usernames on Piazza
+
+Setting Up OpenShift
+
+OpenShift will be used to host the assignments and final project as a public Web site. OpenShift provides simple yet powerful cloud application hosting platform. When an account is created in OpenShift three free gears are provided. A gear can be a server, a database, or some development tool. Three gears will be used in OpenShift. One for a Node.js server, one for a MongoDB instance, and one for Rockmongo, a MongoDB database client. Additional gears are not free. OpenShift allows creating and hosting all sorts of other applications using other frameworks. For this course we will be using Node.js and MongoDB. All development will be done locally on the local machines with local instances of Node.js and MongoDB. When certain that  local versions are stable, changes will be pushed to the remote Node.js server on OpenShift and will automatically deploy. The code will be deployed by OpenShift and the server restarted automatically. The remote server should always reflect the latest stable code. We same code will also be pushed to the public GithHub repository which should mirror the OpenShift repository. The OpenShift repository is private and is used to deploy the Web application to a public server available on the Internet. The OpenShift repository should contain the latest. At all times the GitHub repository should be in sync with the OpenShift repository. If a commit is pushed to the OpenShift repository, make sure to also push to the GitHub repository.
+
+    Create an account at OpenShift
+    Download and install OpenShift's development tools. The development tools will allow installing security credentials used to communicate securely between your machine and OpenShift servers
+    In OpenShift create a Node.js application. The URL of your Web site will be based on the username you chose and the name chosen for the site. Let's settle on the name web-dev. Your application URL should look something like:
+
+    http://web-dev-yourUserName.rhcloud.com
+
+    After creating the application, use the development tool to login to the application and create a security key. At the command line type the following (-l means login)
+
+    > cd ~/summer2016/web-dev
+    > rhc setup -l emailYouUsedTo@create.openshift.account.com
+    If this fails, go back to step 2
+    Login with the email and password you used to create the OpenShift account. Accept all the defaults options. A new ssh key will be created and uploaded to the OpenShift server.
+    From the application's dashboard, copy the git repository URL so that the code can be pushed remotely. This URL looks something like
+
+    ssh://572f...000b8@web-dev-yourUserName.rhcloud.com/~/git/web-dev.git
+    Add the OpenShift git repository as a remote repo where code will be pushed to publish the content
+    on the remote server. Note: this is using a sample URL. Use your real URL
+
+
+> cd ~/summer2016/web-dev
+> git remote add openshift ssh://57...b8@web-dev-yourUserName.rhcloud.com/~/git/web-dev.git
+
+    Add all the source code to the repo and push
+
+    > cd ~/summer2016/web-dev
+    > git add .
+    > git commit -m 'publishing to OpenShift'
+    > git push openshift
+    The OpenShift server will stop, the code will publish and deploy, the server will start up again. This might take a minute or so. If the server does not restart, you can tail the logs to see what's going on:
+
+    > cd ~/summer2016/web-dev
+    > rhc tail -a web-dev
+
+    where web-dev is the name of the Web site
+    Once the server starts, you can visit the Web site at
+
+    http://web-dev-yourUserName.rhcloud.com
+    Perform the same tests performed locally
+
+Setting Up WebStorm IDE
+
+In this course we will be using the WebStorm IDE for developing MEAN stack Web applications. The IDE is free for users with an .edu email. Once you have downloaded and installed WebStorm, you will be able to clone and checkout the remote repositories from OpenShift. From within WebStorm you will be able to manage the repository by committing and pushing right from the IDE. The IDE will allow you to run and debug Node.js Web applications.
+
+    Download and install the WebStorm IDE on your local machine
+    Use your neu.edu email to register a free license
+    Start WebStorm and open the project created in earlier steps in ~/summer2016/web-dev
+    Create a run configuration so you can run and debug NodeJS applications from within WebStorm.
+
+    Select from the menu Run, Edit Configurations...
+    In the Run/Debug Configurations window click on the plus button on the top left
+    Select Node.js
+    Name the configuration web-dev
+    Verify the Node interpreter field has the directory of where Node.js is installed
+    Verify the Working directory field has the directory of your project
+    In the JavaScript file field type server.js, the file you edited previously
+
+    Verify the application works locally.
+
+    From the top right of the IDE, select the dropdown and select web-dev, the run time configuration you created earlier
+    Click on the green play icon next to the dropdown to run your server
+    Alternatively, you can start the local node.js server at the command line terminal at the bottom of the window typing the following:
+
+    > node server.js
+    With a browser, navigate to http://localhost:3000/index.html
