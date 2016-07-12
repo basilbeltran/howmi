@@ -4,7 +4,9 @@ module.exports = function(app)
     app.post("/api/test", createMessage);
     app.delete("/api/test/:id", deleteMessage);
 
-    var connectionString = 'mongodb://127.0.0.1:27017/test';
+    //var connectionString = 'mongodb://127.0.0.1:27017/test';
+    var connectionString = 'mongodb://fuser:password1@ds017165.mlab.com:17165/foenix_db1';
+    console.log('will save on '+connectionString);
 
     if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD) {
         connectionString = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +

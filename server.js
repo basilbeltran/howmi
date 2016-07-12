@@ -12,5 +12,5 @@ require ("./test/app.js")(app);
 
 var ipaddress = process.env.OPENSHIFT_NODEJS_IP;
 var port      = process.env.OPENSHIFT_NODEJS_PORT || 3001;
-
+console.log('will listen on '+port)
 app.listen(port, ipaddress);
