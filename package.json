@@ -1,20 +1,29 @@
 {
   "name": "web-dev",
   "version": "1.0.0",
-  "description": "Web Dev at Northeastern University",
+  "description": "Web Dev at Quiet Retreat",
   "main": "server.js",
   "dependencies": {
+    "asynch": "^0.5.2",
     "body-parser": "^1.15.1",
     "cute-stack": "^1.4.2",
     "express": "^4.13.4",
+    "mocha": "2.2.4",
+    "mongo": "^0.1.0",
+    "mongodb": "^2.2.1",
     "mongoose": "^4.4.15",
     "underscore": "^1.8.3"
   },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "gulp test",
+    "watch": "gulp watch"
   },
-  "author": "Jose G. Annunziato",
+  "devDependencies": {
+    "gulp": "3.8.11",
+    "gulp-mocha": "2.0.1",
+    "mocha": "2.2.4"
+  },
+  "author": "Basil Beltran",
   "license": "ISC"
 }
