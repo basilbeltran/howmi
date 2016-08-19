@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html ng-app="sockets" lang="en">
+<head>
+ <meta charset="utf-8">
+ <title>simple</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="simple.css">
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        .update {
+            background-color: #CCFFCC;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 20px;
+            margin: 20px;
+            padding: 10px;
+        }
+
+        input {
+          background-color: #888888;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+  <button class="fixedButton" onclick="pw.report()" name="statsButton">STATS</button>
+
+  <form name="contactForm" >
+  <fieldset>
+   <label name="labelTest">Text</label>
+   <input type="text" placeholder="type here" id="inputTest"  name="inputTest"
+    ng-model="inputTest" required ng-maxlength=40 ng-minlength=4 />
+   </fieldset>
+  </form>
+
+  <div id="chart_div_1"> </div>
+  <div id="chart_div_2"> </div>
+
+
+
+  <section id="updates" ng-controller="UpdateController as upCtrl">
+    <p class="update" ng-repeat="update in upCtrl.updates">
+        {{ update }}
+    </p>
+  </section>
+
+
+
+
+
+
+  <!-- scripts -->
+
+  <script src="https://code.jquery.com/jquery-3.1.0.js"
+    integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk="
+    crossorigin="anonymous" || src = /jlib/jquery-3.1.0.js ></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+
+
+  <script type="text/javascript">
+        if (typeof jQuery == 'undefined')
+        {
+           document.write(unescape("%3Cscript src='/jlib/jquery-3.1.0.js' type='text/javascript'%3E%3C/script%3E"));
+           document.write(unescape("%3Cscript src='/jlib/bootstrap.min.js' type='text/javascript'%3E%3C/script%3E"));
+           document.write(unescape("%3Cscript src='/jlib/angular.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+  // !!! How can I do the same thing with bootstrap.min.css  ???
+   (function($) {
+    $(function() {
+        if ($('body').css('color') !== 'rgb(51, 51, 51)') {
+            $('head').prepend('<link rel="stylesheet" href="file:///jlib/bootstrap/css/bootstrap.min.css">');
+        }
+    });
+   })(window.jQuery);
+  </script>
+
+
+  <script src="pageWatcher.js"></script>
+
+
+</body></html>

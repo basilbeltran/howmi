@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html  lang="en">
+<head>
+ <meta charset="utf-8">
+ <title>simple</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="simple.css">
+
+</head>
+
+
+
+<body>
+
+
+  <form name="contactForm" >
+  <fieldset>
+  <legend>Signup</legend>
+
+   <label name="email">Your email</label>
+   <input placeholder="Email Address" id="email" ng-model="email" type="text" name="email"
+    required ng-maxlength=40 ng-minlength=4 />
+
+   <label name="phone">Your phone</label>
+   <input placeholder="123-345-5678" id="phone" ng-model="phone" type="text" name="phone"
+    required ng-maxlength=40 ng-minlength=12 />
+
+   <button type="submit" class="btn btn-primary" onclick="val.readForm()">Submit</button>
+   </fieldset>
+  </form>
+
+  <div id="chart_div"> HELLO {{email}}  {{phone}}</div>
+
+
+
+
+
+
+
+  <!-- scripts -->
+
+  <script src="https://code.jquery.com/jquery-3.1.0.js"
+    integrity="sha256-slogkvB1K3VOkzAI8QITxV3VzpOnkeNVsKvtkYLMjfk="
+    crossorigin="anonymous" || src = /jlib/jquery-3.1.0.js ></script>
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+    crossorigin="anonymous"></script>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+  <script>window.angular || document.write('<script src="/jlib/angular.js"><\/script>');</script>
+
+  <script type="text/javascript">
+        if (typeof jQuery == 'undefined')
+        {
+           document.write(unescape("%3Cscript src='/jlib/jquery-3.1.0.js' type='text/javascript'%3E%3C/script%3E"));
+           document.write(unescape("%3Cscript src='/jlib/bootstrap.min.js' type='text/javascript'%3E%3C/script%3E"));
+        }
+  // !!! How can I do the same thing with bootstrap.min.css  ???  following does NOT work ....
+   (function($) {
+    $(function() {
+        if ($('body').css('color') !== 'rgb(51, 51, 51)') {
+            $('head').prepend('<link rel="stylesheet" href="file:///jlib/bootstrap/css/bootstrap.min.css">');
+        }
+    });
+   })(window.jQuery);
+  </script>
+
+
+  <script src="validate.js"></script>
+
+
+</body></html>

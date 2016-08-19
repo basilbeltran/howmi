@@ -1,10 +1,31 @@
-Setting Up the Local Development Environment
+<pre>
+ <a href="tools.html">online tools</a>
+ <a href="///Users/basilbeltran/sites/">Local Env</a>
 Setting Up Node.js Locally
+<a href="https://github.com/jannunzi?tab=repositories" TARGET="MAIN" >Template</a><br/>
 
-Node.js will be used to run and debug Web applications on local machines. When satisfied with local development, the code will be committed and push to OpenShift and GitHub. The code will be deployed to OpenShift and executed on a remote Node.js server. Download and install Node.js on the local development machine. Test that Node.js installed by typing the command node at the command line. A command prompt should appear waiting for additional commands. Type Ctrl+c twice to exit Node.js command line interpreter.
+push to OpenShift
+push to GitHub
+deploy to OpenShift remote Node.js server
+Download and install Node.js 
+Test Node.js 
+ <a href="test/index.html">Test Local MongoDB</a>
+ <a href="https://mlab.com/databases/foenix_db1">MLab</a>
+ <a href="https://openshift.redhat.com/app/console/domain/howmi">openshift console</a>
+ <a href="ttps://developers.openshift.com/languages/nodejs/example-meanstack.html">openshift MEAN</a>
+
+
 Setting Up MongoDB Locally
 
-MongoDB will be used to provide a local database to develop and debug database development. In a later assignment you will create a remote MongoDB instance on OpenShift where your data will be stored remotely. Your remote Node.js server will talk to your remote MongoDB instance. Your local Node.js server will talk to your local MongoDB instance. When you are content with your local development, you will push your code to OpenShift for remote deployment, and to GitHub for us to grade. For now you will just download and install MongoDB locally. Later we will show you how to configure and integrate MongoDB with your Node.js Web application.
+MongoDB will be used to provide a local database to develop and debug database development.
+In a later assignment you will create a remote MongoDB instance on OpenShift
+where your data will be stored remotely.
+Your remote Node.js server will talk to your remote MongoDB instance.
+Your local Node.js server will talk to your local MongoDB instance.
+When you are content with your local development, you will push your code to
+OpenShift for remote deployment, and to GitHub for us to grade.
+For now you will just download and install MongoDB locally.
+Later we will show you how to configure and integrate MongoDB with your Node.js Web application.
 
     Download MongoDB and install on the local development machine as described in the MongoDB documentation. These instructions assume MongoDB was installed in /usr/local/mongo on a Mac
     At the root of the file system, create a directory called data and in there create a directory called db, e.g., /data/db. This directory is where MongoDB will store all files related to the databases managed by MongoDB
@@ -175,3 +196,4 @@ In this course we will be using the WebStorm IDE for developing MEAN stack Web a
 
     > node server.js
     With a browser, navigate to http://localhost:3000/index.html
+</pre>
