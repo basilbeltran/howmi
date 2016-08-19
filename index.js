@@ -34,18 +34,25 @@ var server = app.listen(port, () => {
     console.log('Server up!', port);
 });
 
-//  var connect = require('./connectMongo'); // edx m101
+
+
+// var connect = require('./connectMongo'); // edx m101
 //  require ("./testMongo/app.js")(app);  //cs5610
 
-var db
+
+
+
+
 const MongoClient = require('mongodb').MongoClient; // mongodb://fuser2:<mongodb777>@ds017165.mlab.com:17165/foenix_db1
 MongoClient.connect('mongodb://localhost:27017/example', (err, database) => {
   if (err) {
     console.log(error);
   }
-  db = database
 
-  database.collection('sample').insert({ myKey: "YESSS!" }, function(error, result) {
+  db = database
+  console.log("this runs later; the db variable is now assigned an "+ typeof(db) )
+
+  database.collection('sample').insert({ myKey: "dispassion" }, function(error, result) {
     if (error) {
       console.log(error);
     }
@@ -53,10 +60,11 @@ MongoClient.connect('mongodb://localhost:27017/example', (err, database) => {
 
 });
 
-
+console.log("this runs 1st so the db variable is "+ typeof(db) )
 
 
 var socketServer = io(server);
+//missing error handler on socket
 socketServer.on('connection', (socket) => {  // socketServer for broadcast,  socket to individual
 
     socket.on('healthCheck', (ping) => {
@@ -66,6 +74,8 @@ socketServer.on('connection', (socket) => {  // socketServer for broadcast,  soc
 
 // The browser has sent a statsObj
     socket.on('stats', (stats) => {
-      console.log(JSON.stringify(stats, null, 2) );
+      console.log("added document for statsObj: "+ stats.firstViewTime );
+      // DONT stringify ==> TypeError: Cannot create property '_id' on string
+      db.collection('sample').insert(stats);
     });
 });

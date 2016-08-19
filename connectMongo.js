@@ -6,7 +6,6 @@ var muri_local_example = 'mongodb://localhost:27017/example';
 
 var uri = muri_local_example;
 
-
 module.exports = function(callback) {
   mongodb.MongoClient.connect(uri, callback);
 };
