@@ -52,7 +52,7 @@ MongoClient.connect('mongodb://localhost:27017/example', (err, database) => {
   db = database
   console.log("this runs later; the db variable is now assigned an "+ typeof(db) )
 
-  database.collection('sample').insert({ myKey: "dispassion" }, function(error, result) {
+  database.collection('browserStats').insert({ serverStarted: Date() }, function(error, result) {
     if (error) {
       console.log(error);
     }
@@ -68,14 +68,14 @@ var socketServer = io(server);
 socketServer.on('connection', (socket) => {  // socketServer for broadcast,  socket to individual
 
     socket.on('healthCheck', (ping) => {
-      //console.log("Server got ping");
-      socketServer.emit('healthResponse', Math.random());
+      //console.log("Server got ping from ?> "+ ping);
+      socketServer.emit('healthResponse', Math.random()); // random because ng-repeat hates "dupes"
     });
 
 // The browser has sent a statsObj
     socket.on('stats', (stats) => {
       console.log("added document for statsObj: "+ stats.firstViewTime );
       // DONT stringify ==> TypeError: Cannot create property '_id' on string
-      db.collection('sample').insert(stats);
+      db.collection('browserStats').insert(stats);
     });
 });

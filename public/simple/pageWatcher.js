@@ -236,9 +236,9 @@ function UpdateController($scope) {
     });
 
     setInterval(function(){
-        socket.emit( 'healthCheck', Math.random() );
+        socket.emit( 'healthCheck', Date().toLocaleString() );
         //console.log("sent a ping")
-    }, 2000);
+    }, 5000);
 }
 
 
