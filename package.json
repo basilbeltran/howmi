@@ -1,26 +1,31 @@
 {
-  "name": "web-dev",
+  "name": "HOWMI",
   "version": "1.0.0",
-  "description": "Web Dev at Quiet Retreat",
+  "description": "PROTOTYPE FOR HOWMI",
   "main": "server.js",
   "dependencies": {
-    "asynch": "^0.5.2",
-    "body-parser": "^1.15.1",
-    "cute-stack": "^1.4.2",
-    "express": "^4.13.4",
+    "asynch": "0.5.2",
+    "body-parser": "1.15.1",
+    "cute-stack": "1.4.2",
+    "express": "4.13.4",
     "mocha": "2.2.4",
-    "mongo": "^0.1.0",
-    "mongodb": "^2.2.1",
-    "mongoose": "^4.4.15",
-    "socket.io": "^1.4.8",
-    "superagent": "^2.1.0",
-    "underscore": "^1.8.3",
-    "util": "^0.10.3"
+    "mongo": "0.1.0",
+    "mongodb": "2.2.1",
+    "mongoose": "4.4.15",
+    "socket.io": "1.4.8",
+    "superagent": "2.1.0",
+    "underscore": "1.8.3",
+    "util": "0.10.3"
   },
   "scripts": {
     "start": "node server.js",
-    "test": "mocha test.js",
-    "watch": "gulp watch"
+    "test": "mocha tests/test.js",
+    "gTest": "gulp gTest",
+    "gWatch": "gulp gWatch",
+    "watch2": "gulp watch --gulpfile scripts/customGulp.js",
+    "install" : "scripts/install.js",
+    "postinstall" : "scripts/install.js",
+    "uninstall" : "scripts/uninstall.js"
   },
   "devDependencies": {
     "gulp": "3.8.11",

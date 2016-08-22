@@ -8,22 +8,22 @@ const pageWatch = (function() {
         },
 
 //data is a collection of statsObj
-        data:[],
-
-        statsObj: {
-        "firstViewTime":null,
-        "mouseOutData":[["Time", "screenX", "screenY"]],
-        "scrollData":[["Time", "Y-Offset", "Content Length"]]
-        },
 
 
 // placeholder to test local storage. Not working yet.
         init: function(){
+          localStorage.setItem("browserUUID", "123-abcd");
+//TODO figure out how to identify the browserUUID
+//  https://en.wikipedia.org/wiki/Device_fingerprint
+
           console.log("IN INIT");
           google.charts.load('current', {'packages':['corechart']});
 
           //console.log("READING LOCAL STORAGE")
           console.dir(localStorage.getItem("storedVisits"));
+
+          console.dir("myValue is: " + localStorage.getItem("browserUUID"));
+
         },
 
 // called by a setInterval timer below. Now dormant. Was used to increase the page size.
@@ -46,12 +46,20 @@ const pageWatch = (function() {
               console.dir(localStorage.getItem("storedVisits"));
         },
 
+        data:[],
 
-        getStatsJSON: function() {
-          return JSON.stringify(this.statsObj)
+        statsObj: {
+        "firstViewTime":null,
+        "modLength":0,
+        "mouseOutData":[["Time", "screenX", "screenY"]],
+        "sdLength":0,
+        "scrollData":[["Time", "Y-Offset", "Content Length"]]
         },
 
+
         getStats: function() {
+          this.statsObj.modLength = this.statsObj.mouseOutData.length
+          this.statsObj.sdLength = this.statsObj.scrollData.length
           return this.statsObj
         },
 
@@ -74,6 +82,7 @@ const pageWatch = (function() {
           //      });
           //   let reducer = function(accumulator, nextItem){
           //     accumulator.push( [/^[0-9]{2,}/.exec(nextItem.timeStamp)[0],
+          // /[0-9]+:[0-9]+:[0-9]+/.exec( new Date() )[0]
           //                       nextItem.screenY,
           //                       nextItem.screenX ] )
           //     return accumulator
@@ -224,19 +233,24 @@ var socket = io();
 angular.module('sockets', [])
   .controller('UpdateController', UpdateController)
 
-
 function UpdateController($scope) {
   var upCtrl = this;
   upCtrl.updates = []
 
     socket.on('healthResponse', function(pong){
       //console.log("got a pong ")
-        upCtrl.updates.push( Math.random() );  // Error: [ngRepeat:dupes] is a problem to avoid
+      //console.dir(socket)
+
+        upCtrl.updates.push( pong.key +'\n'+ pong.time );  // Error: [ngRepeat:dupes] is a problem to avoid
         $scope.$apply();
     });
 
     setInterval(function(){
-        socket.emit( 'healthCheck', Date().toLocaleString() );
+        socket.emit( 'healthCheck',
+                    {
+                      "time":new Date().getTime(),
+                      "UUID":localStorage.getItem("browserUUID")
+                    })
         //console.log("sent a ping")
     }, 5000);
 }
@@ -257,12 +271,12 @@ document.documentElement.addEventListener('change', function(event){
 }, true);
 
 document.documentElement.addEventListener('click', function(event){
-  pw.onClick(event);             //   TODO !!!!!!  how to identify elements cleanly ???  and  !!! code compconstion  (event.target) ???
+  pw.onClick(event);
 }, true);
-                                 //   TODO JSON this stuff TO the server for processing (or not?)
 
-window.onunload = function() {   //   TODO !!!!!!  First of all why is this getting called and why doesnt push work?
+window.onunload = function() {   // why is this getting called and why doesnt push work?
   //pw.shutdown();
+  console.log(" WINDOW ONUNLOAD HAS BEEN CALLED")
 };
 
 
