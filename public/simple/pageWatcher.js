@@ -66,8 +66,8 @@ const pageWatch = (function() {
         "browserUUID":null,
         "firstViewTime":null,
         "modLength":0,
-        "mouseOutData":[["Time", "screenX", "screenY"]],
         "sdLength":0,
+        "mouseOutData":[["Time", "screenX", "screenY"]],
         "scrollData":[["Time", "Y-Offset", "Content Length"]]
         },
 
@@ -84,14 +84,14 @@ const pageWatch = (function() {
             + (new Date().getTime() - this.statsObj.firstViewTime) +" milliseconds");
 
           // dump events to console for development purposes.
-          console.log( this.statsObj  );
+          //console.log( this.statsObj  );
 
           // send stats to the server
           socket.emit( 'stats', this.getStats() );
 
 
-            let localMouseOutData = this.statsObj.mouseOutData // WHY do I need to get this vbl?
-            let localScrollData = this.statsObj.scrollData     // WHY?
+            let localMouseOutData = this.statsObj.mouseOutData //NOTE WHY do I need to get this vbl?
+            let localScrollData = this.statsObj.scrollData     // WHY ...  why...  w.. ?
 
             google.charts.setOnLoadCallback( drawStats );  //https://developers.google.com/chart/interactive/docs/gallery/linechart
 
@@ -133,7 +133,7 @@ const pageWatch = (function() {
                 case "change":
                     console.log('GOT change CASE')
                     break;
-                    
+
                 default:
                     console.log('GOT DEFAULT CASE')
             }

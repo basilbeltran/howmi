@@ -30,7 +30,7 @@ exports.add = function(db, ping, socket, callback) {
           "browserToServer": now.getTime() - ping.inqTime
           };
 
-console.dir(bstats)
+//console.dir(bstats)
 
     db.collection('bstats').insertOne(bstats, function(error, result) {
       if (error) { console.log(error) };

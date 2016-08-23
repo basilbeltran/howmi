@@ -26,6 +26,7 @@ var port = process.env.PORT || 1337
 
 var bstats = require('./db/bstatsIface');
 var sstats = require('./db/sstatsIface');
+var stats = require('./db/statsIface');
 
 
 var app = express();
@@ -66,20 +67,13 @@ socketServer.on('connection', (socket) => {  // socketServer for broadcast,  soc
 //TODO learn to write asynchronously and get rid of this setTimeout
 setTimeout(function(){
 
-//HACK practice for stats object, remove when implementing IDEA above
-        // bstats.removeLike(db, ping, function(error, result) {
-        //     if (error) {
-        //       console.log(error)
-        //     }
-        //     console.log("removed previous stat "+ result)
-        // });
-
         bstats.add(db, ping, socket, function(error, result) {
             if (error) {
               console.log(error)
             }
             console.log("howdy "+ result)  //NOTE  WHY DONT I SEE THIS ?
         });
+        console.log("browser says howdy "+ ping.UUID)  
 }, 5);
 
 
@@ -99,8 +93,22 @@ setTimeout(function(){
 // recieved a stats from The browser
 //TODO change stats naming to visit naming
     socket.on('stats', (visit) => {
-      console.log("adding browserVisit: "+ visit.firstViewTime );
-      // DONT stringify ==> TypeError: Cannot create property '_id' on string
-      db.collection('browserStats').insert(visit);
+      console.log("adding browserVisit: "+ visit.firstViewTime +" : "+ visit.browserUUID);
+
+              stats.removeLike(db, visit, function(error, result) {
+                  if (error) {
+                    console.log(error)
+                  }
+                  console.log("removed previous visit "+ result)
+              });
+
+              //db.collection('browserStats').insert(visit);
+              stats.add(db, visit, function(error, result) {
+                  if (error) {
+                    console.log(error)
+                  }
+                  console.log("howdy "+ result)  //NOTE  WHY DONT I SEE THIS ?
+              });
+
     });
 });
