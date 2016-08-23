@@ -7,48 +7,63 @@ const pageWatch = (function() {
         config: {
         },
 
-//data is a collection of statsObj
-
-
-// placeholder to test local storage. Not working yet.
+        //TODO figure out how to identify the browserUUID
+        //  https://en.wikipedia.org/wiki/Device_fingerprint
         init: function(){
-          localStorage.setItem("browserUUID", "123-abcd");
-//TODO figure out how to identify the browserUUID
-//  https://en.wikipedia.org/wiki/Device_fingerprint
+          this.statsObj.browserUUID = "123-abcd"
+          this.statsObj.firstViewTime = new Date().getTime();
 
-          console.log("IN INIT");
+          localStorage.setItem("browserUUID", this.statsObj.browserUUID);
           google.charts.load('current', {'packages':['corechart']});
+          console.dir("browserUUID is: " + localStorage.getItem("browserUUID"));
+          console.dir("firstViewTime is: " + this.statsObj.firstViewTime);
 
-          //console.log("READING LOCAL STORAGE")
-          console.dir(localStorage.getItem("storedVisits"));
-
-          console.dir("myValue is: " + localStorage.getItem("browserUUID"));
-
+          socket.emit( 'inquiry',
+                      {
+                        "inqTime": new Date().getTime(),
+                        "visitTime": pw.statsObj.firstViewTime,
+                        "UUID":localStorage.getItem("browserUUID"),
+                        "state": "init"
+                      })
         },
 
-// called by a setInterval timer below. Now dormant. Was used to increase the page size.
+
+
+        // called by a setInterval timer below.
         ticker: function() {  // display something to the browser
           const d = new Date().toLocaleString();
-          // $('body').append("<div>"+ d + " "+ window.pageYOffset +"</div>");  // mouse location would be cool here
+          $('body').append("<div>"+ d + " "+ window.pageYOffset +"</div>");
         },
 
-// the user is leaving the site. Add the event array to a local array of visits
+
+
+        // the user is leaving the site.
         shutdown: function() {
           console.log("IN SHUTDOWN");  // HAVN'T SEEN THIS
 
+          socket.emit( 'inquiry',
+                      {
+                        "inqTime": new Date().getTime(),
+                        "visitTime": pw.statsObj.firstViewTime,
+                        "UUID":localStorage.getItem("browserUUID"),
+                        "state": "shutdown"
+                      })
+
+
           if (typeof(Storage) !== "undefined") {
-              console.log("SHUTDOWN WRITES LOCAL STORAGE");
-              this.data.push([{"visitTime":this.statsObj.firstViewTime, "stats":this.statsObj }])
-              localStorage.setItem("storedVisits", this.data);
+              //this.data.push([{"visitTime":this.statsObj.firstViewTime, "stats":this.statsObj }])
+              //localStorage.setItem("storedVisits", this.data);
           } else {
               console.log("No Web Storage support");
           }
-              console.dir(localStorage.getItem("storedVisits"));
+//TODO console.dir(localStorage.getItem("storedVisits"));
         },
+
 
         data:[],
 
         statsObj: {
+        "browserUUID":null,
         "firstViewTime":null,
         "modLength":0,
         "mouseOutData":[["Time", "screenX", "screenY"]],
@@ -63,7 +78,7 @@ const pageWatch = (function() {
           return this.statsObj
         },
 
-               // crunch events and display stats to the web
+// crunch events and display stats to the web, send stats to server
         report: function() {
           console.log("Visit time so far : "
             + (new Date().getTime() - this.statsObj.firstViewTime) +" milliseconds");
@@ -73,37 +88,9 @@ const pageWatch = (function() {
 
           // send stats to the server
           socket.emit( 'stats', this.getStats() );
-          this.shutdown();
 
 
-// functional programming expanded syntax
-          //   let graphData = this.statsObj.events.filter(function(e) {
-          //      e.type === "mouseout"
-          //      });
-          //   let reducer = function(accumulator, nextItem){
-          //     accumulator.push( [/^[0-9]{2,}/.exec(nextItem.timeStamp)[0],
-          // /[0-9]+:[0-9]+:[0-9]+/.exec( new Date() )[0]
-          //                       nextItem.screenY,
-          //                       nextItem.screenX ] )
-          //     return accumulator
-          //   }
-          // console.dir( graphData.reduce(reducer, []) );
-
-// or more succinctly
-          // let localMouseOutData = this.statsObj.events
-          //   .filter(nextItem => nextItem.type === "mouseout")
-          //   .reduce((acc, nextItem) => {
-          //            acc.push( [ Math.floor(nextItem.timeStamp),
-          //                       nextItem.screenX,
-          //                       nextItem.screenY ] )
-          //     return acc
-          //   }, [])
-
-
-// Extract mouseout events from the EVENT collection (the mouseOut event parameters are available)
-// store in statsObj in array format
-
-            let localMouseOutData = this.statsObj.mouseOutData // WHY?
+            let localMouseOutData = this.statsObj.mouseOutData // WHY do I need to get this vbl?
             let localScrollData = this.statsObj.scrollData     // WHY?
 
             google.charts.setOnLoadCallback( drawStats );  //https://developers.google.com/chart/interactive/docs/gallery/linechart
@@ -144,20 +131,19 @@ const pageWatch = (function() {
                     console.log('GOT click CASE')
                     break;
                 case "change":
-                    //code block
+                    console.log('GOT change CASE')
                     break;
+                    
                 default:
                     console.log('GOT DEFAULT CASE')
             }
-
-
-
           },
 
           onMouseOut: function(event) {
             this.onEvent(event)
 
           },
+
 
           onChanges: function(event) {
             this.onEvent(event)
@@ -220,15 +206,31 @@ const pageWatch = (function() {
 });
 
 
-const pw = new pageWatch;
-pw.init();
-pw.statsObj.firstViewTime = new Date().getTime();
-const tick = setInterval(function(){ pw.ticker() }, 1000); // DONT KNOW HOW TO REFERENCE ticker from inside pageWatcher
+
+
 
 
 
 
 var socket = io();
+const pw = new pageWatch;
+pw.init();
+const tick = setInterval(function(){ pw.ticker() }, 1000); // DONT KNOW HOW TO REFERENCE ticker from inside pageWatcher
+
+// for debugging socket.io
+//console.dir(socket)
+// setInterval(function(){
+//   //console.log('sending ping')
+//   socket.emit( 'inquiry',
+//               {
+//                 "inqTime": new Date().getTime(),
+//                 "visitTime": pw.statsObj.firstViewTime,
+//                 "UUID":localStorage.getItem("browserUUID"),
+//                 "state": "PING"
+//               })
+// }, 4000);
+
+
 
 angular.module('sockets', [])
   .controller('UpdateController', UpdateController)
@@ -237,25 +239,14 @@ function UpdateController($scope) {
   var upCtrl = this;
   upCtrl.updates = []
 
-    socket.on('healthResponse', function(pong){
-      //console.log("got a pong ")
+    socket.on('response', function(pong){
+      //console.log("got a pong "+ pong.key+" "+pong.time)
       //console.dir(socket)
 
-        upCtrl.updates.push( pong.key +'\n'+ pong.time );  // Error: [ngRepeat:dupes] is a problem to avoid
+        upCtrl.updates.push( pong.key +'\n'+ pong.time );  // avoid [ngRepeat:dupes]
         $scope.$apply();
     });
-
-    setInterval(function(){
-        socket.emit( 'healthCheck',
-                    {
-                      "time":new Date().getTime(),
-                      "UUID":localStorage.getItem("browserUUID")
-                    })
-        //console.log("sent a ping")
-    }, 5000);
 }
-
-
 
 
 window.onscroll = function(event) {
@@ -275,10 +266,14 @@ document.documentElement.addEventListener('click', function(event){
 }, true);
 
 window.onunload = function() {   // why is this getting called and why doesnt push work?
-  //pw.shutdown();
-  console.log(" WINDOW ONUNLOAD HAS BEEN CALLED")
+  //console.log(" WINDOW ONUNLOAD HAS BEEN CALLED")
+  pw.shutdown();
 };
 
+window.onbeforeunload = function() {
+  //console.log(" WINDOW **ONBEFOREUNLOAD** HAS BEEN CALLED")
+  //pw.shutdown();
+};
 
 //END ----____
 /*
