@@ -3,33 +3,35 @@
 //TODO finish edx and statsIface modules
 
 //module.exports = function() {
-//console.log(process.env);
+
 
   // var ipaddress = process.env.OPENSHIFT_NODEJS_IP;
   // app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3001);   //set and OR
 
-
+//console.log(process.env);
 var port = process.env.PORT || 1337
-    U = require('util')
-    io = require('socket.io')
-    fs = require('fs')
-    bp = require('body-parser')
-    path = require('path')
-    express = require('express')
-    assert = require('assert')
-
-    debug = require('debug')
-    mlog = debug('server:log')
-    minfo = debug('server:info')
-    merror = debug('server:error')
-    require('cute-stack')('pretty')
-
-var bstats = require('./db/bstatsIface');
-var sstats = require('./db/sstatsIface');
-var stats = require('./db/statsIface');
+U = require('util')
+assert = require('assert')
 
 
-var app = express();
+debug = require('debug')
+mlog = debug('server:log')
+minfo = debug('server:info')
+merror = debug('server:error')
+//require('cute-stack')('pretty')
+
+
+let bstats = require('./db/bstatsIface');
+let sstats = require('./db/sstatsIface');
+let stats = require('./db/statsIface');
+
+io = require('socket.io')
+
+express = require('express')
+fs = require('fs')
+bp = require('body-parser')
+path = require('path')
+let app = express();
 
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
@@ -42,9 +44,12 @@ var server = app.listen(port, () => {
 
 //CONNECT TO MONGO with mongodb.MongoClient
 connect = require('./connectMongo')
+mongoose = require('mongoose')
+mongoose.connect('mongodb://localhost:27017/test')
 
-// WRITE TO MONGO A SERVER UP    got null .... timing?
-connect(function(error, conn) {  if (error) { console.log('Socket,io error', error) }
+
+// WRITE TO MONGO A SERVER UP
+connect(function(error, conn) {  if (error) { console.log('Socket.io error', error) }
   db = conn;
   db.collection('sstats').insert({ serverStarted: Date() }, function(error, result) {
     if (error) {  console.log(error); }
@@ -73,7 +78,7 @@ setTimeout(function(){
             }
             console.log("howdy "+ result)  //NOTE  WHY DONT I SEE THIS ?
         });
-        console.log("browser says howdy "+ ping.UUID)  
+        console.log("browser says howdy "+ ping.UUID)
 }, 5);
 
 
