@@ -1,14 +1,16 @@
+//XXX MODULE created as a function with object 'module' returned
+//XXX onEvent() called from listeners
 
 const pageWatch = (function() {
     "use strict";
 
-
-    const module = {             //this is returned below
+    const module = {             //this is returned
         config: {
         },
 
-        //TODO figure out how to identify the browserUUID
-        //  https://en.wikipedia.org/wiki/Device_fingerprint
+        //TODO figure out how to identify the browserUUID ... what does cloud9 use?
+
+
         init: function(){
           this.statsObj.browserUUID = "123-abcd"
           this.statsObj.firstViewTime = new Date().getTime();
@@ -109,7 +111,21 @@ const pageWatch = (function() {
             }
         }, // end report function
 
+        onMouseOut: function(event) {
+          this.onEvent(event)
+        },
 
+        onChanges: function(event) {
+          this.onEvent(event)
+        }
+
+        onClick: function(event) {
+          this.onEvent(event)
+        },
+
+        onScroll: function(event) {
+          this.onEvent(event);
+        },
 
           onEvent: function(event) {
             // lets have all the munging in one place
@@ -136,73 +152,12 @@ const pageWatch = (function() {
 
                 default:
                     console.log('GOT DEFAULT CASE')
-            }
-          },
+                }
+              },
 
-          onMouseOut: function(event) {
-            this.onEvent(event)
-
-          },
-
-
-          onChanges: function(event) {
-            this.onEvent(event)
-          },
-
-
-          onClick: function(event) {
-            this.onEvent(event)
-          },
-
-
-  // here is a case where metadata is collected with the "raw" data
-  // decided not to use this at this point, its slowing me down,
-  // in fact, I'm going to try a monolithic data object
-
-          onScroll: function(event) {
-            this.onEvent(event);
-          //     const windowHeight = this.getWindowHeight();
-          //     const docHeight = this.getDocHeight();
-          //     const scrollPosition = this.getScrollPosition();
-          //     const percentOfPage = this.getPercent(windowHeight, docHeight, scrollPosition);
-          //     this.statsObj.scrollData.push({"gmtTime": new Date().getTime(),
-          //                                   "scrollPosition": scrollPosition,
-          //                                   "percentOfPage": percentOfPage,
-          //                                   "windowHeight": windowHeight,
-          //                                   "docHeight": docHeight,
-          //                                   "event": event
-          //                         })
-          //  return percentOfPage;
-          },
-
-
-  //im not using these at the moment
-          getPercent: function(windowHeight, docHeight, scrollPosition) {
-              const result = ((scrollPosition + windowHeight) / docHeight) * 100;
-              return Math.floor(result);
-          },
-
-          getScrollPosition: function() {
-              return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-          },
-
-          getWindowHeight: function() {
-              return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0;
-          },
-
-          getDocHeight: function() {
-              return Math.max(
-                  document.body.scrollHeight || 0,
-                  document.documentElement.scrollHeight || 0,
-                  document.body.offsetHeight || 0,
-                  document.documentElement.offsetHeight || 0,
-                  document.body.clientHeight || 0,
-                  document.documentElement.clientHeight || 0
-              );
-          }
 
     };
     return module;
-});
 
+});
 module.exports = pageWatch;

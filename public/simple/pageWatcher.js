@@ -1,43 +1,22 @@
 
+//XXX BROWSERIFY      browserify -e pageWatcher.js -o frontEnd.js
+//XXX this file is referenced in the cmd as the entry point. It calls the first "require"
+//XXX outputs frontEnd.js which is referenced in simple.html <script src="frontEnd.js"></script>
+//http://numbers.brighterplanet.com/2011/08/04/add-node-js-commonjs-style-require-to-client-side-javascript-with-browserify/
+
 var pageWatch = require('./pageWatch');
 
+//XXX SOCKET.IO on the client side
 socket = io();
-pw = new pageWatch;
+
+//XXX pageWatch MODULE OBJECT created
+pw = new pageWatch;  //NOTE needed global after browserify
 pw.init();
-const tick = setInterval(function(){ pw.ticker() }, 1000); // DONT KNOW HOW TO REFERENCE ticker from inside pageWatcher
 
-// for debugging socket.io
-//console.dir(socket)
-// setInterval(function(){
-//   //console.log('sending ping')
-//   socket.emit( 'inquiry',
-//               {
-//                 "inqTime": new Date().getTime(),
-//                 "visitTime": pw.statsObj.firstViewTime,
-//                 "UUID":localStorage.getItem("browserUUID"),
-//                 "state": "PING"
-//               })
-// }, 4000);
+//XXX use of setInterval
+const tick = setInterval(function(){ pw.ticker() }, 1000);
 
-
-
-
-angular.module('sockets', [])
-  .controller('UpdateController', UpdateController)
-
-function UpdateController($scope) {
-  var upCtrl = this;
-  upCtrl.updates = []
-
-    socket.on('response', function(pong){
-      //console.log("got a pong "+ pong.key+" "+pong.time)
-      //console.dir(socket)
-
-        upCtrl.updates.push( pong.key +'\n'+ pong.time );  // avoid [ngRepeat:dupes]
-        $scope.$apply();
-    });
-}
-
+//XXX event listeners for onscroll, mouseout, change, click, unload
 
 window.onscroll = function(event) {
   pw.onScroll(event);
@@ -65,7 +44,20 @@ window.onbeforeunload = function() {
   //pw.shutdown();
 };
 
-//END ----____
-/*
+//XXX ANGULAR module defined for to socket.io 'response' message from server
+angular.module('sockets', [])
+  .controller('UpdateController', UpdateController)
 
-*/
+
+function UpdateController($scope) {
+  var upCtrl = this;
+  upCtrl.updates = []
+
+    socket.on('response', function(pong){
+      //console.log("got a pong "+ pong.key+" "+pong.time)
+      //console.dir(socket)
+
+        upCtrl.updates.push( pong.key +'\n'+ pong.time );  // avoid [ngRepeat:dupes]
+        $scope.$apply();
+    });
+}
