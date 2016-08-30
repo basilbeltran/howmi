@@ -1,15 +1,52 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
+const pageDraw = (function() {
+    "use strict";
+
+    const module = {
+
+        drawMouseOutGoog: function(mouseOutData) {
+
+            google.charts.setOnLoadCallback( drawStats );
+            function drawStats() {
+              let googTableData = google.visualization.arrayToDataTable(mouseOutData);
+              let options = {title: 'MOUSE events', curveType: 'function',legend: { position: 'bottom' } };
+              let chart = new google.visualization.LineChart(document.getElementById('chart_div_1'));
+              chart.draw(googTableData, options);
+            }
+        },
+
+        drawScrollGoog: function(scrollData) {
+            google.charts.setOnLoadCallback( drawStats );
+            function drawStats() {
+               let googTableData = google.visualization.arrayToDataTable(scrollData);
+               let options = {title: 'SCROLL events', curveType: 'function',legend: { position: 'bottom' } };
+               let chart2 = new google.visualization.LineChart(document.getElementById('chart_div_2'));
+               chart2.draw(googTableData, options);
+            }
+        }
+
+    };
+    return module;
+
+});
+module.exports = pageDraw;
+
+},{}],2:[function(require,module,exports){
+//XXX MODULE created as a function with object 'module' returned
+//XXX onEvent() called from listeners
+
 const pageWatch = (function() {
     "use strict";
 
-
-    const module = {             //this is returned below
+    const module = {             //this is returned
         config: {
+
         },
 
-        //TODO figure out how to identify the browserUUID
-        //  https://en.wikipedia.org/wiki/Device_fingerprint
+        //TODO figure out how to identify the browserUUID ... what does cloud9 use?
+
+
         init: function(){
           this.statsObj.browserUUID = "123-abcd"
           this.statsObj.firstViewTime = new Date().getTime();
@@ -27,7 +64,6 @@ const pageWatch = (function() {
                         "state": "init"
                       })
         },
-
 
 
         // called by a setInterval timer below.
@@ -81,41 +117,43 @@ const pageWatch = (function() {
 
 // crunch events and display stats to the web, send stats to server
         report: function() {
+//console.log( this.statsObj  );  // dump events to console for development purposes.
+
           console.log("Visit time so far : "
             + (new Date().getTime() - this.statsObj.firstViewTime) +" milliseconds");
 
-          // dump events to console for development purposes.
-          //console.log( this.statsObj  );
 
-          // send stats to the server
+          //XXX send stats to the server
           socket.emit( 'stats', this.getStats() );
 
 
-            let localMouseOutData = this.statsObj.mouseOutData //NOTE WHY do I need to get this vbl?
-            let localScrollData = this.statsObj.scrollData     // WHY ...  why...  w.. ?
+          pd.drawMouseOutGoog(this.statsObj.mouseOutData);
+          pd.drawScrollGoog(this.statsObj.scrollData);
 
-            google.charts.setOnLoadCallback( drawStats );  //https://developers.google.com/chart/interactive/docs/gallery/linechart
+//             let localMouseOutData = this.statsObj.mouseOutData //NOTE WHY do I need to get this vbl?
+//             let localScrollData = this.statsObj.scrollData     // WHY ...  why...  w.. ?
+//
+//             google.charts.setOnLoadCallback( drawStats );  //https://developers.google.com/chart/interactive/docs/gallery/linechart
+//
+//             function drawStats() {
+//               let googTableData = google.visualization.arrayToDataTable(localMouseOutData);
+//               let options = {title: 'MOUSE events', curveType: 'function',legend: { position: 'bottom' } };
+//               let chart = new google.visualization.LineChart(document.getElementById('chart_div_1'));
+//               chart.draw(googTableData, options);
+//
+// //console.log(JSON.stringify(localScrollData, null, 2))
+//                googTableData = google.visualization.arrayToDataTable(localScrollData);
+//                options = {title: 'SCROLL events', curveType: 'function',legend: { position: 'bottom' } };
+//                let chart2 = new google.visualization.LineChart(document.getElementById('chart_div_2'));
+//                chart2.draw(googTableData, options);
+//             }
 
-            function drawStats() {
-              let googTableData = google.visualization.arrayToDataTable(localMouseOutData);
-              let options = {title: 'MOUSE events', curveType: 'function',legend: { position: 'bottom' } };
-              let chart = new google.visualization.LineChart(document.getElementById('chart_div_1'));
-              chart.draw(googTableData, options);
-
-//console.log(JSON.stringify(localScrollData, null, 2))
-               googTableData = google.visualization.arrayToDataTable(localScrollData);
-               options = {title: 'SCROLL events', curveType: 'function',legend: { position: 'bottom' } };
-               let chart2 = new google.visualization.LineChart(document.getElementById('chart_div_2'));
-               chart2.draw(googTableData, options);
-            }
         }, // end report function
 
 
 
           onEvent: function(event) {
-            // lets have all the munging in one place
-            //let eventCopy = Object.create(event)   // a deep copy ? not ideal
-            //let eventCopy = this.cloneDR(event)    // another "this" problem? Let's go real time
+            // all the extraction in one place
 
             switch(event.type) {
                 case "mouseout":
@@ -137,104 +175,69 @@ const pageWatch = (function() {
 
                 default:
                     console.log('GOT DEFAULT CASE')
-            }
-          },
+                }
+              }
 
-          onMouseOut: function(event) {
-            this.onEvent(event)
-
-          },
-
-
-          onChanges: function(event) {
-            this.onEvent(event)
-          },
-
-
-          onClick: function(event) {
-            this.onEvent(event)
-          },
-
-
-  // here is a case where metadata is collected with the "raw" data
-  // decided not to use this at this point, its slowing me down,
-  // in fact, I'm going to try a monolithic data object
-
-          onScroll: function(event) {
-            this.onEvent(event);
-          //     const windowHeight = this.getWindowHeight();
-          //     const docHeight = this.getDocHeight();
-          //     const scrollPosition = this.getScrollPosition();
-          //     const percentOfPage = this.getPercent(windowHeight, docHeight, scrollPosition);
-          //     this.statsObj.scrollData.push({"gmtTime": new Date().getTime(),
-          //                                   "scrollPosition": scrollPosition,
-          //                                   "percentOfPage": percentOfPage,
-          //                                   "windowHeight": windowHeight,
-          //                                   "docHeight": docHeight,
-          //                                   "event": event
-          //                         })
-          //  return percentOfPage;
-          },
-
-
-  //im not using these at the moment
-          getPercent: function(windowHeight, docHeight, scrollPosition) {
-              const result = ((scrollPosition + windowHeight) / docHeight) * 100;
-              return Math.floor(result);
-          },
-
-          getScrollPosition: function() {
-              return (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
-          },
-
-          getWindowHeight: function() {
-              return window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0;
-          },
-
-          getDocHeight: function() {
-              return Math.max(
-                  document.body.scrollHeight || 0,
-                  document.documentElement.scrollHeight || 0,
-                  document.body.offsetHeight || 0,
-                  document.documentElement.offsetHeight || 0,
-                  document.body.clientHeight || 0,
-                  document.documentElement.clientHeight || 0
-              );
-          }
 
     };
     return module;
-});
 
+});
 module.exports = pageWatch;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+//XXX SOCKET.IO on the client side
+socket = io();
+
+
+//XXX BROWSERIFY      browserify -e pageWatcher.js -o frontEnd.js
+//XXX this file is referenced in the cmd as the entry point. It calls the first "require"
+//XXX outputs frontEnd.js which is referenced in simple.html <script src="frontEnd.js"></script>
+//http://numbers.brighterplanet.com/2011/08/04/add-node-js-commonjs-style-require-to-client-side-javascript-with-browserify/
 
 var pageWatch = require('./pageWatch');
+var pageDraw = require('./pageDraw');
 
-socket = io();
-pw = new pageWatch;
+//XXX pageWatch MODULE OBJECT created
+pw = new pageWatch;  //NOTE needed global after browserify
+pd = new pageDraw;
 pw.init();
-const tick = setInterval(function(){ pw.ticker() }, 1000); // DONT KNOW HOW TO REFERENCE ticker from inside pageWatcher
 
-// for debugging socket.io
-//console.dir(socket)
-// setInterval(function(){
-//   //console.log('sending ping')
-//   socket.emit( 'inquiry',
-//               {
-//                 "inqTime": new Date().getTime(),
-//                 "visitTime": pw.statsObj.firstViewTime,
-//                 "UUID":localStorage.getItem("browserUUID"),
-//                 "state": "PING"
-//               })
-// }, 4000);
+//XXX use of setInterval
+const tick = setInterval(function(){ pw.ticker() }, 1000);
 
+//XXX event listeners for onscroll, mouseout, change, click, unload
 
+window.onscroll = function(event) {
+  pw.onEvent(event);
+};
 
+document.documentElement.addEventListener('mouseout', function(event){
+  pw.onEvent(event);
+}, true);
 
+document.documentElement.addEventListener('change', function(event){
+  pw.onEvent(event);
+}, true);
+
+document.documentElement.addEventListener('click', function(event){
+  pw.onEvent(event);
+}, true);
+
+window.onunload = function() {   // why is this getting called and why doesnt push work?
+  //console.log(" WINDOW ONUNLOAD HAS BEEN CALLED")
+  pw.shutdown();
+};
+
+window.onbeforeunload = function() {
+  //console.log(" WINDOW **ONBEFOREUNLOAD** HAS BEEN CALLED")
+  //pw.shutdown();
+};
+
+//XXX ANGULAR module defined for to socket.io 'response' message from server
 angular.module('sockets', [])
   .controller('UpdateController', UpdateController)
+
 
 function UpdateController($scope) {
   var upCtrl = this;
@@ -249,36 +252,4 @@ function UpdateController($scope) {
     });
 }
 
-
-window.onscroll = function(event) {
-  pw.onScroll(event);
-};
-
-document.documentElement.addEventListener('mouseout', function(event){
-  pw.onMouseOut(event);
-}, true);
-
-document.documentElement.addEventListener('change', function(event){
-  pw.onChanges(event);
-}, true);
-
-document.documentElement.addEventListener('click', function(event){
-  pw.onClick(event);
-}, true);
-
-window.onunload = function() {   // why is this getting called and why doesnt push work?
-  //console.log(" WINDOW ONUNLOAD HAS BEEN CALLED")
-  pw.shutdown();
-};
-
-window.onbeforeunload = function() {
-  //console.log(" WINDOW **ONBEFOREUNLOAD** HAS BEEN CALLED")
-  //pw.shutdown();
-};
-
-//END ----____
-/*
-
-*/
-
-},{"./pageWatch":1}]},{},[2]);
+},{"./pageDraw":1,"./pageWatch":2}]},{},[3]);

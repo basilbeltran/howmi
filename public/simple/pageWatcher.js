@@ -1,3 +1,6 @@
+//XXX SOCKET.IO on the client side
+socket = io();
+
 
 //XXX BROWSERIFY      browserify -e pageWatcher.js -o frontEnd.js
 //XXX this file is referenced in the cmd as the entry point. It calls the first "require"
@@ -5,12 +8,11 @@
 //http://numbers.brighterplanet.com/2011/08/04/add-node-js-commonjs-style-require-to-client-side-javascript-with-browserify/
 
 var pageWatch = require('./pageWatch');
-
-//XXX SOCKET.IO on the client side
-socket = io();
+var pageDraw = require('./pageDraw');
 
 //XXX pageWatch MODULE OBJECT created
 pw = new pageWatch;  //NOTE needed global after browserify
+pd = new pageDraw;
 pw.init();
 
 //XXX use of setInterval
@@ -19,19 +21,19 @@ const tick = setInterval(function(){ pw.ticker() }, 1000);
 //XXX event listeners for onscroll, mouseout, change, click, unload
 
 window.onscroll = function(event) {
-  pw.onScroll(event);
+  pw.onEvent(event);
 };
 
 document.documentElement.addEventListener('mouseout', function(event){
-  pw.onMouseOut(event);
+  pw.onEvent(event);
 }, true);
 
 document.documentElement.addEventListener('change', function(event){
-  pw.onChanges(event);
+  pw.onEvent(event);
 }, true);
 
 document.documentElement.addEventListener('click', function(event){
-  pw.onClick(event);
+  pw.onEvent(event);
 }, true);
 
 window.onunload = function() {   // why is this getting called and why doesnt push work?

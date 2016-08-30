@@ -6,6 +6,7 @@ const pageWatch = (function() {
 
     const module = {             //this is returned
         config: {
+
         },
 
         //TODO figure out how to identify the browserUUID ... what does cloud9 use?
@@ -28,7 +29,6 @@ const pageWatch = (function() {
                         "state": "init"
                       })
         },
-
 
 
         // called by a setInterval timer below.
@@ -82,55 +82,43 @@ const pageWatch = (function() {
 
 // crunch events and display stats to the web, send stats to server
         report: function() {
+//console.log( this.statsObj  );  // dump events to console for development purposes.
+
           console.log("Visit time so far : "
             + (new Date().getTime() - this.statsObj.firstViewTime) +" milliseconds");
 
-          // dump events to console for development purposes.
-          //console.log( this.statsObj  );
 
-          // send stats to the server
+          //XXX send stats to the server
           socket.emit( 'stats', this.getStats() );
 
 
-            let localMouseOutData = this.statsObj.mouseOutData //NOTE WHY do I need to get this vbl?
-            let localScrollData = this.statsObj.scrollData     // WHY ...  why...  w.. ?
+          pd.drawMouseOutGoog(this.statsObj.mouseOutData);
+          pd.drawScrollGoog(this.statsObj.scrollData);
 
-            google.charts.setOnLoadCallback( drawStats );  //https://developers.google.com/chart/interactive/docs/gallery/linechart
+//             let localMouseOutData = this.statsObj.mouseOutData //NOTE WHY do I need to get this vbl?
+//             let localScrollData = this.statsObj.scrollData     // WHY ...  why...  w.. ?
+//
+//             google.charts.setOnLoadCallback( drawStats );  //https://developers.google.com/chart/interactive/docs/gallery/linechart
+//
+//             function drawStats() {
+//               let googTableData = google.visualization.arrayToDataTable(localMouseOutData);
+//               let options = {title: 'MOUSE events', curveType: 'function',legend: { position: 'bottom' } };
+//               let chart = new google.visualization.LineChart(document.getElementById('chart_div_1'));
+//               chart.draw(googTableData, options);
+//
+// //console.log(JSON.stringify(localScrollData, null, 2))
+//                googTableData = google.visualization.arrayToDataTable(localScrollData);
+//                options = {title: 'SCROLL events', curveType: 'function',legend: { position: 'bottom' } };
+//                let chart2 = new google.visualization.LineChart(document.getElementById('chart_div_2'));
+//                chart2.draw(googTableData, options);
+//             }
 
-            function drawStats() {
-              let googTableData = google.visualization.arrayToDataTable(localMouseOutData);
-              let options = {title: 'MOUSE events', curveType: 'function',legend: { position: 'bottom' } };
-              let chart = new google.visualization.LineChart(document.getElementById('chart_div_1'));
-              chart.draw(googTableData, options);
-
-//console.log(JSON.stringify(localScrollData, null, 2))
-               googTableData = google.visualization.arrayToDataTable(localScrollData);
-               options = {title: 'SCROLL events', curveType: 'function',legend: { position: 'bottom' } };
-               let chart2 = new google.visualization.LineChart(document.getElementById('chart_div_2'));
-               chart2.draw(googTableData, options);
-            }
         }, // end report function
 
-        onMouseOut: function(event) {
-          this.onEvent(event)
-        },
 
-        onChanges: function(event) {
-          this.onEvent(event)
-        }
-
-        onClick: function(event) {
-          this.onEvent(event)
-        },
-
-        onScroll: function(event) {
-          this.onEvent(event);
-        },
 
           onEvent: function(event) {
-            // lets have all the munging in one place
-            //let eventCopy = Object.create(event)   // a deep copy ? not ideal
-            //let eventCopy = this.cloneDR(event)    // another "this" problem? Let's go real time
+            // all the extraction in one place
 
             switch(event.type) {
                 case "mouseout":
@@ -153,7 +141,7 @@ const pageWatch = (function() {
                 default:
                     console.log('GOT DEFAULT CASE')
                 }
-              },
+              }
 
 
     };
