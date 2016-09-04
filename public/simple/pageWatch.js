@@ -80,9 +80,9 @@ const pageWatch = (function() {
           return this.statsObj
         },
 
-// crunch events and display stats to the web, send stats to server
+// display stats to the web, send stats to server
         report: function() {
-//console.log( this.statsObj  );  // dump events to console for development purposes.
+          //console.log( this.statsObj  );  // dump events to console for development purposes.
 
           console.log("Visit time so far : "
             + (new Date().getTime() - this.statsObj.firstViewTime) +" milliseconds");
@@ -94,24 +94,6 @@ const pageWatch = (function() {
 
           pd.drawMouseOutGoog(this.statsObj.mouseOutData);
           pd.drawScrollGoog(this.statsObj.scrollData);
-
-//             let localMouseOutData = this.statsObj.mouseOutData //NOTE WHY do I need to get this vbl?
-//             let localScrollData = this.statsObj.scrollData     // WHY ...  why...  w.. ?
-//
-//             google.charts.setOnLoadCallback( drawStats );  //https://developers.google.com/chart/interactive/docs/gallery/linechart
-//
-//             function drawStats() {
-//               let googTableData = google.visualization.arrayToDataTable(localMouseOutData);
-//               let options = {title: 'MOUSE events', curveType: 'function',legend: { position: 'bottom' } };
-//               let chart = new google.visualization.LineChart(document.getElementById('chart_div_1'));
-//               chart.draw(googTableData, options);
-//
-// //console.log(JSON.stringify(localScrollData, null, 2))
-//                googTableData = google.visualization.arrayToDataTable(localScrollData);
-//                options = {title: 'SCROLL events', curveType: 'function',legend: { position: 'bottom' } };
-//                let chart2 = new google.visualization.LineChart(document.getElementById('chart_div_2'));
-//                chart2.draw(googTableData, options);
-//             }
 
         }, // end report function
 

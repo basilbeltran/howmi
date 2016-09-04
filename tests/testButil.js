@@ -32,10 +32,12 @@ var articles = [{
 
 var brands = [{
               "id": 1,
-              "name": "SuperKitchen"
+              "name": "SuperKitchen",
+              "bung": "bungbung"
           }, {
               "id": 2,
-              "name": "HomeSweetHome"
+              "name": "HomeSweetHome",
+              "bung": "bungbung"
           }]
 
 var result = bu.join(brands, articles, "id", "brand_id", function(article, brand) {
